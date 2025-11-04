@@ -1,4 +1,5 @@
 # Find the algorithm stubs you need to complete the tasks
+from collections import Counter
 
 
 def text_to_list(input_text):
@@ -9,7 +10,9 @@ def text_to_list(input_text):
     Returns:
         list representation of input_text, where each word is a different element in the list
     """
-    pass
+    input_text = input_text.replace(",", " , ")
+    
+    return input_text.lower().split()
 
 
 def get_letter_frequencies(word):
@@ -21,7 +24,7 @@ def get_letter_frequencies(word):
         is a letter in word and the corresponding int
         is the frequency of the letter in word
     """
-    pass
+    return Counter(word)
 
 
 
@@ -37,7 +40,7 @@ def get_frequencies(input_iterable):
     Note:
         You can assume that the only kinds of white space in the text documents we provide will be new lines or space(s) between words (i.e. there are no tabs)
     """
-    pass
+    return Counter(input_iterable)
 
 
 def calculate_similarity_score(freq_dict1, freq_dict2):
@@ -64,4 +67,24 @@ def calculate_similarity_score(freq_dict1, freq_dict2):
          all frequencies in both dict1 and dict2.
         Return 1-(DIFF/ALL) rounded to 2 decimal places
     """
-    pass
+    elements = set(freq_dict1.keys()) | set(freq_dict2.keys())
+
+    total_delta = 0
+    total_sigma = 0
+
+    for element in elements:
+        count1 = freq_dict1.get(element, 0)
+        count2 = freq_dict2.get(element, 0)
+
+        delta = abs(count1 - count2)
+        sigma = count1 + count2
+
+        total_delta += delta
+        total_sigma += sigma
+    
+    if total_sigma == 0:
+        return 1.0
+    
+    similarity = 1.0 - (total_delta / total_sigma)
+
+    return round(similarity, 2)

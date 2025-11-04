@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import StatsSerializer, WordFreqSerializer
-from .algo import text_to_list, get_frequencies
+from .serializers import StatsSerializer, WordFreqSerializer, SimilaritySerializer
+from .algo import text_to_list, get_frequencies, calculate_similarity_score
 
 
 # IMPORTANT: No changes to TextToList and WordFreq classes are necessary
@@ -29,4 +29,24 @@ class WordFreq(APIView):
                     status=418,
                 )
             return Response({"response": frequencies_})
+        return Response({"message": incoming_data.error_messages}, status=400)
+
+
+
+class SimilarityScore(APIView):
+    def post(self, request):
+        incoming_data = SimilaritySerializer(data=request.data)
+        if incoming_data.is_valid():
+            payload1 = incoming_data.data.get("payload1", [])
+            payload2 = incoming_data.data.get("payload2", [])
+            
+
+            freq_dict1 = get_frequencies(payload1)
+            freq_dict2 = get_frequencies(payload2)
+
+
+            score = calculate_similarity_score(freq_dict1, freq_dict2)
+
+            return Response({"response": score})
+        
         return Response({"message": incoming_data.error_messages}, status=400)

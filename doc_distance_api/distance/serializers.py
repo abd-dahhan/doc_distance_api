@@ -8,3 +8,13 @@ class StatsSerializer(serializers.Serializer):
 
 class WordFreqSerializer(serializers.Serializer):
     payload = serializers.ListField()
+
+
+class SimilaritySerializer(serializers.Serializer):
+    payload1 = serializers.ListField()
+    payload2 = serializers.ListField()
+
+
+
+
+
